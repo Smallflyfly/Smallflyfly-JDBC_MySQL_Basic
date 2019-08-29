@@ -11,12 +11,12 @@ public class Jdbc01 {
 
     public void selectAll() throws ClassNotFoundException, SQLException {
         //注册驱动
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://localhost:3306/mygamedb?useUnicode=true&characterEncoding=UTF8";
-        String user = "root";
-        String password = "fang2831016";
+//        Class.forName("com.mysql.cj.jdbc.Driver");
+//        String url = "jdbc:mysql://localhost:3306/mygamedb?useUnicode=true&characterEncoding=UTF8";
+//        String user = "root";
+//        String password = "fang2831016";
         //建立连接
-        Connection connection = DriverManager.getConnection(url,user,password);
+        Connection connection = JDBCUtils.getConnection();
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery("select  * from users");
 
@@ -35,9 +35,9 @@ public class Jdbc01 {
         ResultSet rs = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/mygamedb?useUnicod=true&characterEncoding=UTF8";
-            connection = DriverManager.getConnection(url, "root", "fang2831016");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            String url = "jdbc:mysql://localhost:3306/mygamedb?useUnicod=true&characterEncoding=UTF8";
+            connection = JDBCUtils.getConnection();
             String sql = "select * from users where username = ? and password = ?";
             System.out.println(sql);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -57,14 +57,14 @@ public class Jdbc01 {
     }
 
     public boolean selectByUserByPage(int pageNumber, int pageCount) throws ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://localhost:3306/mygamedb?useUnicode=true&characterEncoding=UTF8";
-        String user = "root";
-        String password = "fang2831016";
+//        Class.forName("com.mysql.cj.jdbc.Driver");
+//        String url = "jdbc:mysql://localhost:3306/mygamedb?useUnicode=true&characterEncoding=UTF8";
+//        String user = "root";
+//        String password = "fang2831016";
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url,user,password);
+            Connection connection = JDBCUtils.getConnection();
             String sql = "select * from users limit ?,?";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, (pageNumber-1)*pageCount);
