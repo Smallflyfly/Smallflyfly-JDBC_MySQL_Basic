@@ -22,7 +22,7 @@ public class Jdbc01 {
 
         while (rs.next()){
             System.out.println(rs.getInt("userid") + "," + rs.getString("username") + "," +
-                    rs.getString("password") + "," + rs.getString("age"));
+                    rs.getString("password") + "," + rs.getInt("balance"));
         }
 
         rs.close();
@@ -86,4 +86,50 @@ public class Jdbc01 {
         }
         return false;
     }
+
+    public void insertTableUsers(String username, String password) throws SQLException, ClassNotFoundException {
+        Connection connection = JDBCUtils.getConnection();
+        String sql = "insert into users(username, password) values (?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+        int rset = preparedStatement.executeUpdate();
+        System.out.println(rset);
+    }
+
+    public void alterTableUsers(String colName, int defaultValue) throws SQLException, ClassNotFoundException {
+        Connection connection = JDBCUtils.getConnection();
+        String sql = "alter table users add column ? int null default ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, colName);
+        preparedStatement.setInt(2, defaultValue);
+        int result = preparedStatement.executeUpdate();
+        System.out.println(result);
+    }
+
+    public void transfer(String username1, String username2, int cash) throws SQLException, ClassNotFoundException {
+//        Connection connection = DPCPDataSource.getConnection();
+        Connection connection = C3P0DataSource.getConnection();
+        //事务
+        connection.setAutoCommit(false);
+        String sql = "update users set balance = balance - ? where username = ?";
+        PreparedStatement preparedStatement1 = connection.prepareStatement(sql);
+        preparedStatement1.setInt(1, cash);
+        preparedStatement1.setString(2, username1);
+        preparedStatement1.executeUpdate();
+
+//        String fang = null;
+//        char ss = fang.charAt(2);
+
+        sql = "update users set balance = balance + ? where username = ?";
+        PreparedStatement preparedStatement2 = connection.prepareStatement(sql);
+        preparedStatement2.setInt(1, cash);
+        preparedStatement2.setString(2, username2);
+        preparedStatement2.executeUpdate();
+        connection.commit();
+
+//        DPCPDataSource.close(preparedStatement1, preparedStatement2, connection);
+        C3P0DataSource.close(preparedStatement1, preparedStatement2, connection);
+    }
+
 }
